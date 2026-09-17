@@ -3,9 +3,9 @@ let deleteFirstPhotoDelay
 
 async function start(){
     try{
-        const response = await fetch("https://dog.ceo/api/breeds/image/random")
-    const data = await response.json()
-    createBreedList(data.message)
+        const response = await fetch("https://dog.ceo/api/breeds/list/all")
+        const data = await response.json()
+        createBreedList(data.message)
     }catch(e){
         console.log("There was a problem fetching the breed list")
     }
@@ -15,11 +15,11 @@ start()
 
 function createBreedList(breedList){
     document.getElementById("breed").innerHTML = `
-    <select onchange="loadByBreed">
+    <select onchange="loadByBreed(this.value)">
         <option>Choose a dog breed</option>
             ${Object.keys(breedList).map(function (breed){
-                return `<option><${breed}/option>`
-            }).join}
+                return `<option>${breed}</option>`
+            }).join("")}
     </select>
     `
 }
@@ -34,26 +34,26 @@ async function loadByBreed(breed){
 
 function createSlideshow(images){
     let currentPosition = 0
-    cleanInterval(timer)
+    clearInterval(timer)
     clearTimeout(deleteFirstPhotoDelay)
 
     if(images.length > 1){
-        document.getElementId("slideshow").innerHTML = `
-    <div class="slide" style="background-image: url('${images[0]}"></div>
-    <div class="slide" style="background-image: url('${images[1]}"></div>`
+        document.getElementById("slideshow").innerHTML = `
+    <div class="slide" style="background-image: url('${images[0]}')"></div>
+    <div class="slide" style="background-image: url('${images[1]}')"></div>`
 
-    currentPosition += 2
-    if(images.length == 2) currentPosition = 0
-    timer = setInterval(nextSlide, 3000)
+        currentPosition += 2
+        if(images.length == 2) currentPosition = 0
+        timer = setInterval(nextSlide, 3000)
     }else{
-        document.getElementId("slideshow").innerHTML = `
-    <div class="slide" style="background-image: url('${images[0]}"></div>
+        document.getElementById("slideshow").innerHTML = `
+    <div class="slide" style="background-image: url('${images[0]}')"></div>
     <div class="slide"></div>`
     }
 
     function nextSlide(){
-        document.getElementId("slideshow").insertAdjacentHTML("beforeend", `<div class="slide" style="background-image: url('${images[currentPosition]}"></div>`)
-       deleteFirstPhotoDelay = setTimeout(function(){
+        document.getElementById("slideshow").insertAdjacentHTML("beforeend", `<div class="slide" style="background-image: url('${images[currentPosition]}')"></div>`)
+        deleteFirstPhotoDelay = setTimeout(function(){
             document.querySelector(".slide").remove()
         }, 1000)
         if(currentPosition + 1 >= images.length){
